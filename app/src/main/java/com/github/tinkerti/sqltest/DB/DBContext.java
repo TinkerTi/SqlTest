@@ -11,16 +11,19 @@ import java.io.File;
  * Created by tiankui on 4/25/17.
  */
 
-public class DBContext extends ContextWrapper{
+public class DBContext extends ContextWrapper {
+
+    String fileDir;
 
     public DBContext(Context base) {
         super(base);
+        fileDir = base.getFilesDir().getAbsolutePath();
     }
 
     @Override
     public File getDatabasePath(String name) {
-        File file=new File(name);
-        if(!file.getParentFile().exists()){
+        File file = new File(fileDir + File.separator + name);
+        if (!file.getParentFile().exists()) {
             file.getParentFile().mkdir();
         }
         return file;
@@ -28,11 +31,11 @@ public class DBContext extends ContextWrapper{
 
     @Override
     public SQLiteDatabase openOrCreateDatabase(String name, int mode, SQLiteDatabase.CursorFactory factory) {
-        return SQLiteDatabase.openOrCreateDatabase(getDatabasePath(name),factory);
+        return SQLiteDatabase.openOrCreateDatabase(getDatabasePath(name), factory);
     }
 
     @Override
     public SQLiteDatabase openOrCreateDatabase(String name, int mode, SQLiteDatabase.CursorFactory factory, DatabaseErrorHandler errorHandler) {
-        return SQLiteDatabase.openOrCreateDatabase(getDatabasePath(name).getAbsolutePath(),factory, errorHandler);
+        return SQLiteDatabase.openOrCreateDatabase(getDatabasePath(name).getAbsolutePath(), factory, errorHandler);
     }
 }

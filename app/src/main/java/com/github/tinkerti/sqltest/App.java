@@ -6,6 +6,7 @@ import com.facebook.stetho.Stetho;
 import com.facebook.stetho.dumpapp.DumperPlugin;
 import com.facebook.stetho.inspector.database.DefaultDatabaseConnectionProvider;
 import com.facebook.stetho.inspector.protocol.ChromeDevtoolsDomain;
+import com.github.tinkerti.sqltest.DB.DBManager;
 import com.github.tinkerti.sqltest.stetho.TMDatabaseDriver;
 import com.github.tinkerti.sqltest.stetho.TMDatabaseFilesProvider;
 import com.github.tinkerti.sqltest.stetho.TMDbFilesDumperPlugin;
@@ -34,5 +35,8 @@ public class App extends Application{
                 return defaultInspectorModulesBuilder.finish();
             }
         });
+
+        DBManager.init(this);
+        DBManager.getInstance().getDbHelper().getWritableDatabase();
     }
 }
