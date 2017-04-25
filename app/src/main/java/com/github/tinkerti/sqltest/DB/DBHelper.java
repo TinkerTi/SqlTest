@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
 
 
-
+    public static final String TABLE_NAME_TRAIN_TIME="train_time";
     private static final String CREATE_TABLE_TRAIN_TIME = "create table train_time(start_location text,destination text," +
             "departs text,arrives time)";
 

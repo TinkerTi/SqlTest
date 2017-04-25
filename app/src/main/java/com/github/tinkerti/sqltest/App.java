@@ -38,5 +38,7 @@ public class App extends Application{
 
         DBManager.init(this);
         DBManager.getInstance().getDbHelper().getWritableDatabase();
+        DBManager.getInstance().addTableField();
+        DBManager.getInstance().deleteTableField();
     }
 }
