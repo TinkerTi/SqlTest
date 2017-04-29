@@ -38,7 +38,14 @@ public class App extends Application{
 
         DBManager.init(this);
         DBManager.getInstance().getDbHelper().getWritableDatabase();
-        DBManager.getInstance().addTableField();
-        DBManager.getInstance().deleteTableField();
+//        DBManager.getInstance().addTableField();
+//        DBManager.getInstance().dropTableField();
+//        Handler handler=new Handler(getMainLooper());
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                DBManager.getInstance().dropTable();
+//            }
+//        },1000);
     }
 }

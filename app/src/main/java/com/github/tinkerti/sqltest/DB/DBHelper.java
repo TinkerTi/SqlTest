@@ -11,8 +11,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
 
 
-    public static final String TABLE_NAME_TRAIN_TIME="train_time";
-    private static final String CREATE_TABLE_TRAIN_TIME = "create table train_time(start_location text,destination text," +
+    public static final String TABLE_NAME_TRAIN_TIME = "train_time";
+    public static final String CREATE_TABLE_TRAIN_TIME = "create table if not exists train_time(start_location text,destination text," +
             "departs text,arrives time)";
 
     public DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -21,7 +21,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_TABLE_TRAIN_TIME);
+//        db.execSQL(CREATE_TABLE_TRAIN_TIME);
     }
 
     @Override
