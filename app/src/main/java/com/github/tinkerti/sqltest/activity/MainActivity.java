@@ -62,6 +62,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DBManager.getInstance().insertDataIntoCategoryTable();
         DBManager.getInstance().insertIntoTableMemberDetails();
     }
+
+    public void updateTable(View view){
+        DBManager.getInstance().updateTable();
+    }
+
+    public void doExercise(View view){
+        DBManager.getInstance().doExercise();
+    }
+
+    public void initData(View view){
+        DBManager.getInstance().createTableAndInitData();
+    }
+
+    public void selectLike(View view){
+        DBManager.getInstance().selectLike();
+    }
     @Override
     public void onClick(View v) {
 

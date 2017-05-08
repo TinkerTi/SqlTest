@@ -5,6 +5,8 @@ import android.content.ContextWrapper;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.github.tinkerti.sqltest.activity.TestClass;
+
 import java.io.File;
 
 /**
@@ -18,6 +20,7 @@ public class DBContext extends ContextWrapper {
     public DBContext(Context base) {
         super(base);
         fileDir = base.getFilesDir().getAbsolutePath();
+
     }
 
     @Override

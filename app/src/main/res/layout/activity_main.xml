@@ -142,5 +142,58 @@
             android:text="插入数据"
             android:textSize="16sp" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:padding="5dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:background="#BFC9CA"
+            android:gravity="center"
+            android:onClick="updateTable"
+            android:text="更新数据"
+            android:textSize="16sp" />
+        <TextView
+            android:padding="5dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:background="#BFC9CA"
+            android:gravity="center"
+            android:onClick="initData"
+            android:text="初始化数据"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:padding="5dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:background="#BFC9CA"
+            android:gravity="center"
+            android:onClick="doExercise"
+            android:text="练习"
+            android:textSize="16sp" />
+        <TextView
+            android:padding="5dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:background="#BFC9CA"
+            android:gravity="center"
+            android:onClick="selectLike"
+            android:text="like选择"
+            android:textSize="16sp" />
+    </LinearLayout>
 
 </LinearLayout>
