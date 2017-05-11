@@ -20,7 +20,15 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @Override
+    public void onConfigure(SQLiteDatabase db) {
+        super.onConfigure(db);
+        String enableForeign = "PRAGMA foreign_keys = ON";
+        db.execSQL(enableForeign);
+    }
+
+    @Override
     public void onCreate(SQLiteDatabase db) {
+
 //        db.execSQL(CREATE_TABLE_TRAIN_TIME);
     }
 

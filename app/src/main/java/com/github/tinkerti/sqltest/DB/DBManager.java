@@ -64,7 +64,7 @@ public class DBManager {
         database.execSQL(insertSql);
         String dropTableSql = "drop table train_time";
         database.execSQL(dropTableSql);
-        String renameTable="alter table train_times rename to train_time";
+        String renameTable = "alter table train_times rename to train_time";
         database.execSQL(renameTable);
     }
 
@@ -74,7 +74,7 @@ public class DBManager {
     }
 
     public void createMemberDetailsTable() {
-        String sql = "create table MemberDetails (MemberId integer, FirstName text, LastName text, DateOfBirth text, Street text," +
+        String sql = "create table MemberDetails (MemberId integer , FirstName text, LastName text, DateOfBirth text, Street text," +
                 "City text, State varchar,ZipCode text, Email text, DateOfJoining text)";
         getDbHelper().getWritableDatabase().execSQL(sql);
     }
@@ -93,10 +93,13 @@ public class DBManager {
         String sql = "create table Film (FilmId integer,FilmName text,YearReleased integer,PlotSummary text,AvailableDVD text," +
                 "Rating integer,CategoryId integer)";
         getDbHelper().getWritableDatabase().execSQL(sql);
+
+        String addFieldSql = "alter table Film add column DVDPrice real";
+        getDbHelper().getWritableDatabase().execSQL(addFieldSql);
     }
 
     public void createFilmCategoryTable() {
-        String sql = "create table FilmCategory(CategoryId integer,Category text)";
+        String sql = "create table FilmCategory(CategoryId integer primary key,Category text)";
         getDbHelper().getWritableDatabase().execSQL(sql);
     }
 
@@ -870,12 +873,246 @@ public class DBManager {
 //        getDbHelper().getWritableDatabase().execSQL(insertSql4);
 
         //check constraint
-        String createSql2="create table if not exists testCheck(column1 integer not null check(column1>0),column2 text)";
+        String createSql2 = "create table if not exists testCheck(column1 integer not null check(column1>0),column2 text)";
         getDbHelper().getWritableDatabase().execSQL(createSql2);
-        String insertSql5="insert into testCheck values(1,'1')";
+        String insertSql5 = "insert into testCheck values(1,'1')";
 //        String insertSql6="insert into testCheck values(-1,'2')";
         getDbHelper().getWritableDatabase().execSQL(insertSql5);
 //        getDbHelper().getWritableDatabase().execSQL(insertSql6);
+    }
+
+    /**
+     * 创建表的时候添加上if not exists，可以避免重复创建表；
+     */
+    public void addPrimaryKey() {
+        String sql = "create table if not exists testPrimaryKey(column1 text,column2 text,constraint test_pk primary key(column1,column2))";
+        getDbHelper().getWritableDatabase().execSQL(sql);
+        String insertSql1 = "insert into testPrimaryKey values('1','4')";
+        getDbHelper().getWritableDatabase().execSQL(insertSql1);
+        String insertSql2 = "insert into testPrimaryKey values('1','5')";
+        getDbHelper().getWritableDatabase().execSQL(insertSql2);
+//        这个虽然添加了primary key，但是由于没有not null 的限制，所以可以插入null值；
+        String insertSql3 = "insert into testPrimaryKey values('1',null)";
+        getDbHelper().getWritableDatabase().execSQL(insertSql3);
+
+
+        String createSql = "create table if not exists testPrimary(column1 text primary key,column2 text)";
+        getDbHelper().getWritableDatabase().execSQL(createSql);
+        //在主键的column中插入空值，也是可以的，所以在SQLite中primary key应该与not null结合使用；
+        String insertSql4 = "insert into testPrimary values(1,'1')";
+        getDbHelper().getWritableDatabase().execSQL(insertSql4);
+    }
+
+    /**
+     * 添加外键需要在SQLiteDatabaseHelper中的onConfigure（）中配置打开foreign key的开关；
+     */
+    public void testForeignKey() {
+
+
+        String sql = "create table if not exists testForeignKey(column1 text primary key,column2 text)";
+        getDbHelper().getWritableDatabase().execSQL(sql);
+        String insertSql1 = "insert into testForeignKey values('1','4')";
+        getDbHelper().getWritableDatabase().execSQL(insertSql1);
+        String insertSql2 = "insert into testForeignKey values('2','5')";
+        getDbHelper().getWritableDatabase().execSQL(insertSql2);
+//        这个虽然添加了primary key，但是由于没有not null 的限制，所以可以插入null值；
+        String insertSql3 = "insert into testForeignKey values('3','6')";
+        getDbHelper().getWritableDatabase().execSQL(insertSql3);
+
+
+        String createSql = "create table if not exists testForeign" +
+                "(column1 text,column2 text," +
+                "foreign key (column1) references testForeignKey(column1))";
+        getDbHelper().getWritableDatabase().execSQL(createSql);
+        //在主键的column中插入空值，也是可以的，所以在SQLite中primary key应该与not null结合使用；
+        String insertSql4 = "insert into testForeign values('3','1')";
+        getDbHelper().getWritableDatabase().execSQL(insertSql4);
+    }
+
+    public void testIndex() {
+        String createIndexSql = "create index MemberDetails_index on MemberDetails(FirstName,LastName)";
+        getDbHelper().getWritableDatabase().execSQL(createIndexSql);
+        String selectSql = "select FirstName,LastName from MemberDetails";
+        Cursor cursor13 = getDbHelper().getWritableDatabase().rawQuery(selectSql, null);
+        while (cursor13.moveToNext()) {
+            Log.e("more than one or", "姓名：" + cursor13.getString(0) + " " + cursor13.getString(1));
+        }
+        String dropIndexSql = "drop index MemberDetails_index";
+        getDbHelper().getWritableDatabase().execSQL(dropIndexSql);
+        String selectSql1 = "select FirstName,LastName from MemberDetails";
+        Cursor cursor14 = getDbHelper().getWritableDatabase().rawQuery(selectSql1, null);
+        while (cursor14.moveToNext()) {
+            Log.e("more than one or", "姓名：" + cursor14.getString(0) + " " + cursor14.getString(1));
+        }
+    }
+
+    public void alterAttendanceTable() {
+        String deleteSql = "delete from Attendance where MemberAttended='N'";
+        getDbHelper().getWritableDatabase().execSQL(deleteSql);
+        String createTempTable = "create table if not exists tempAttendance(LocationId integer,MeetingDate text,MemberId integer)";
+        getDbHelper().getWritableDatabase().execSQL(createTempTable);
+        //select多个column的时候不用加括号；
+        String copySql = "insert into tempAttendance select LocationId,MeetingDate,MemberId from Attendance";
+        String dropSql = "drop table Attendance";
+        String renameSql = "alter table tempAttendance rename to Attendance";
+        getDbHelper().getWritableDatabase().execSQL(copySql);
+        getDbHelper().getWritableDatabase().execSQL(dropSql);
+        getDbHelper().getWritableDatabase().execSQL(renameSql);
+    }
+
+    public void addFavCategoryForeignKey() {
+        String createIndex = "create unique index MemberDetails_index on MemberDetails(MemberId)";
+        getDbHelper().getWritableDatabase().execSQL(createIndex);
+        String createSql = "create table if not exists tempFavCategory(CategoryId integer,MemberId integer," +
+                "foreign key (CategoryId) references FilmCategory(CategoryId)," +
+                "foreign key(MemberId) references MemberDetails(MemberId)) ";
+        String copySql = "insert into tempFavCategory select * from FavCategory";
+        String dropSql = "drop table FavCategory";
+        String renameSql = "alter table tempFavCategory rename to FavCategory";
+        getDbHelper().getWritableDatabase().execSQL(createSql);
+        getDbHelper().getWritableDatabase().execSQL(copySql);
+        getDbHelper().getWritableDatabase().execSQL(dropSql);
+        getDbHelper().getWritableDatabase().execSQL(renameSql);
+
+        String insertSql = "insert into FavCategory values(5,3)";
+        getDbHelper().getWritableDatabase().execSQL(insertSql);
+    }
+
+    public void testOperators() {
+        String sql = "select MemberId,MemberId+2*3 from MemberDetails";
+        Cursor cursor = getDbHelper().getWritableDatabase().rawQuery(sql, null);
+        while (cursor.moveToNext()) {
+            Log.e("selectLike", cursor.getInt(0) + "..." + cursor.getInt(1));
+        }
+        Log.e("分隔符", "--------------------");
+
+        String sql1 = "select MemberId-10,abs(MemberId-10) from MemberDetails";
+        Cursor cursor1 = getDbHelper().getWritableDatabase().rawQuery(sql1, null);
+        while (cursor1.moveToNext()) {
+            Log.e("selectLike", cursor1.getInt(0) + "..." + cursor1.getInt(1));
+        }
+        Log.e("分隔符", "--------------------");
+
+
+//        SQLite不支持这个函数；
+        String sql2 = "select MemberId,ZipCode/MemberId from MemberDetails";
+        Cursor cursor2 = getDbHelper().getWritableDatabase().rawQuery(sql2, null);
+        while (cursor2.moveToNext()) {
+            Log.e("selectLike", cursor2.getInt(0) + "..." + cursor2.getInt(1));
+        }
+        Log.e("分隔符", "--------------------");
+
+        String updateFilm = "update Film set DVDPrice=2.333 where FilmId=2";
+        getDbHelper().getWritableDatabase().execSQL(updateFilm);
+
+        //不支持ceil（）
+//        String sql2 = "select DVDPrice,ceiling(DVDPrice) from Film order by DVDPrice";
+//        Cursor cursor2 = getDbHelper().getWritableDatabase().rawQuery(sql2, null);
+//        while (cursor2.moveToNext()) {
+//            Log.e("selectLike", cursor2.getDouble(0) + "..." + cursor2.getInt(1));
+//        }
+//        Log.e("分隔符", "--------------------");
 
     }
+
+    /**
+     * String insertSql2="insert into testNull values(2)";
+     * String insertSql3="insert into testNull values(4)";
+     * 这种语法是错误的，如果只指定了一个column的值，需要说明插入哪个column
+     */
+
+    public void testNulls() {
+        String createSql = "create table if not exists testNull(column1 integer,column2 integer)";
+        String insertSql1 = "insert into testNull values(1,3)";
+        String insertSql2 = "insert into testNull(column1) values(2)";
+        String insertSql3 = "insert into testNull(column2) values(4)";
+        getDbHelper().getWritableDatabase().execSQL(createSql);
+        getDbHelper().getWritableDatabase().execSQL(insertSql1);
+        getDbHelper().getWritableDatabase().execSQL(insertSql2);
+        getDbHelper().getWritableDatabase().execSQL(insertSql3);
+
+        String sql2 = "select column1,column2,column1+column2 from testNull";
+        Cursor cursor2 = getDbHelper().getWritableDatabase().rawQuery(sql2, null);
+        while (cursor2.moveToNext()) {
+            Log.e("selectLike", cursor2.getInt(0) + "..." + cursor2.getInt(1) + "...." + cursor2.getInt(2));
+        }
+        Log.e("分隔符", "--------------------");
+    }
+
+    public void testStringNulls() {
+        String createSql = "create table if not exists testStringNull(column1 text,column2 text)";
+        String insertSql1 = "insert into testStringNull values('1','3')";
+        String insertSql2 = "insert into testStringNull(column1) values('2')";
+        String insertSql3 = "insert into testStringNull(column2) values('4')";
+        getDbHelper().getWritableDatabase().execSQL(createSql);
+        getDbHelper().getWritableDatabase().execSQL(insertSql1);
+        getDbHelper().getWritableDatabase().execSQL(insertSql2);
+        getDbHelper().getWritableDatabase().execSQL(insertSql3);
+
+        String sql2 = "select column1,column2,column1||column2 from testStringNull";
+        Cursor cursor2 = getDbHelper().getWritableDatabase().rawQuery(sql2, null);
+        while (cursor2.moveToNext()) {
+            Log.e("selectLike", cursor2.getString(0) + "..." + cursor2.getString(1) + "...." + cursor2.getString(2));
+        }
+        Log.e("分隔符", "--------------------");
+    }
+
+    public void testGroupBy() {
+        String selectSql = "select City from MemberDetails group by City";
+        Cursor cursor = getDbHelper().getWritableDatabase().rawQuery(selectSql, null);
+        while (cursor.moveToNext()) {
+            Log.e("groupBy", "city_name " + cursor.getString(0));
+        }
+        Log.e("分隔符", "--------------------");
+    }
+
+    public void testCount() {
+        String countSql = "select City,count(City) from MemberDetails";
+        Cursor cursor = getDbHelper().getWritableDatabase().rawQuery(countSql, null);
+        while (cursor.moveToNext()) {
+            Log.e("count", "numbers: " + cursor.getString(0) + ".." + cursor.getInt(1));
+        }
+        Log.e("分隔符", "--------------------");
+
+        String countSql2 = "select count(Street),count(MemberId),count(City) from MemberDetails";
+        Cursor cursor2 = getDbHelper().getWritableDatabase().rawQuery(countSql2, null);
+        while (cursor2.moveToNext()) {
+            Log.e("count", "numbers: " + cursor2.getInt(0) + "..." + cursor2.getInt(1) + "..." + cursor2.getInt(2));
+        }
+        Log.e("分隔符", "--------------------");
+
+
+        String countSql3 = "select State,count(FirstName) from MemberDetails group by State";
+        Cursor cursor3 = getDbHelper().getWritableDatabase().rawQuery(countSql3, null);
+        while (cursor3.moveToNext()) {
+            Log.e("count", "numbers: " + cursor3.getString(0) + "..." + cursor3.getInt(1));
+        }
+        Log.e("分隔符", "--------------------");
+
+
+        String countSql4 = " select count(distinct City),count(City) from MemberDetails";
+        Cursor cursor4 = getDbHelper().getWritableDatabase().rawQuery(countSql4, null);
+        while (cursor4.moveToNext()) {
+            Log.e("count", "numbers: " + cursor4.getInt(0) + "..." + cursor4.getInt(1));
+        }
+        Log.e("分隔符", "--------------------");
+
+        String countSql5 = "select Category,count(FavCategory.MemberId) from FavCategory " +
+                "inner join FilmCategory on FavCategory.CategoryId=FilmCategory.CategoryId " +
+                "group by FavCategory.CategoryId " +
+                "order by count(MemberId) desc";
+        Cursor cursor5 = getDbHelper().getWritableDatabase().rawQuery(countSql5, null);
+        while (cursor5.moveToNext()) {
+            Log.e("count", "numbers: " + cursor5.getString(0)+"..."+cursor5.getInt(1));
+        }
+        Log.e("分隔符", "--------------------");
+
+        String countSql6 = "select avg(MemberId) from MemberDetails";
+        Cursor cursor6 = getDbHelper().getWritableDatabase().rawQuery(countSql6, null);
+        while (cursor6.moveToNext()) {
+            Log.e("count", "numbers: " + cursor6.getInt(0) + ".." );
+        }
+        Log.e("分隔符", "--------------------");
+    }
+
 }

@@ -1,198 +1,247 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.github.tinkerti.sqltest.activity.MainActivity">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="#BFC9CA"
             android:gravity="center"
             android:onClick="createTable"
             android:text="创建表"
             android:textSize="16sp" />
+
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="#BFC9CA"
             android:gravity="center"
             android:onClick="addField"
             android:text="添加field"
             android:textSize="16sp" />
+
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="#BFC9CA"
             android:gravity="center"
             android:onClick="dropField"
             android:text="删除field"
             android:textSize="16sp" />
+
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="#BFC9CA"
             android:gravity="center"
             android:onClick="dropTable"
             android:text="删除表"
             android:textSize="16sp" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="#BFC9CA"
             android:gravity="center"
             android:onClick="createMemberDetailTable"
             android:text="创建会员详情表"
             android:textSize="16sp" />
+
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="#BFC9CA"
             android:gravity="center"
             android:onClick="createAttendanceTable"
             android:text="创建Attendance表"
             android:textSize="16sp" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="#BFC9CA"
             android:gravity="center"
             android:onClick="createFilmTable"
             android:text="创建Film表"
             android:textSize="16sp" />
+
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="#BFC9CA"
             android:gravity="center"
             android:onClick="createFilmCategoryTable"
             android:text="创建FilmCategory表"
             android:textSize="16sp" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="#BFC9CA"
             android:gravity="center"
             android:onClick="createFavCategoryTable"
             android:text="创建FavCategory表"
             android:textSize="16sp" />
+
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="#BFC9CA"
             android:gravity="center"
             android:onClick="insertDataIntoFilmCategoryTable"
             android:text="在FilmCategory表中插入数据"
             android:textSize="16sp" />
     </LinearLayout>
+
     <LinearLayout
-        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:orientation="horizontal">
+
         <TextView
-            android:padding="5dp"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="#BFC9CA"
             android:gravity="center"
             android:onClick="createAllTable"
+            android:padding="5dp"
             android:text="创建所有表"
             android:textSize="16sp" />
+
         <TextView
-            android:padding="5dp"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="#BFC9CA"
             android:gravity="center"
             android:onClick="insertData"
+            android:padding="5dp"
             android:text="插入数据"
             android:textSize="16sp" />
     </LinearLayout>
+
     <LinearLayout
-        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:orientation="horizontal">
+
         <TextView
-            android:padding="5dp"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="#BFC9CA"
             android:gravity="center"
             android:onClick="updateTable"
+            android:padding="5dp"
             android:text="更新数据"
             android:textSize="16sp" />
+
         <TextView
-            android:padding="5dp"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="#BFC9CA"
             android:gravity="center"
             android:onClick="initData"
+            android:padding="5dp"
             android:text="初始化数据"
             android:textSize="16sp" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:orientation="horizontal">
+
         <TextView
-            android:padding="5dp"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="#BFC9CA"
             android:gravity="center"
             android:onClick="doExercise"
+            android:padding="5dp"
             android:text="练习"
             android:textSize="16sp" />
+
         <TextView
-            android:padding="5dp"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:background="#BFC9CA"
             android:gravity="center"
             android:onClick="selectLike"
+            android:padding="5dp"
             android:text="like选择"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="#BFC9CA"
+            android:gravity="center"
+            android:onClick="addPrimaryKey"
+            android:padding="5dp"
+            android:text="添加主键"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="#BFC9CA"
+            android:gravity="center"
+            android:onClick="testForeignKey"
+            android:padding="5dp"
+            android:text="testForeignKey"
             android:textSize="16sp" />
     </LinearLayout>
 

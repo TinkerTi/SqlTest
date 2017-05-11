@@ -68,7 +68,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void doExercise(View view){
-        DBManager.getInstance().doExercise();
+//        DBManager.getInstance().doExercise();
+//        DBManager.getInstance().alterAttendanceTable();
+//        DBManager.getInstance().addFavCategoryForeignKey();
+//        DBManager.getInstance().testOperators();
+//        DBManager.getInstance().testNulls();
+//        DBManager.getInstance().testStringNulls();
+//        DBManager.getInstance().testGroupBy();
+        DBManager.getInstance().testCount();
     }
 
     public void initData(View view){
@@ -77,6 +84,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void selectLike(View view){
         DBManager.getInstance().selectLike();
+    }
+
+    public void addPrimaryKey(View view){
+        DBManager.getInstance().addPrimaryKey();
+    }
+
+    public void testForeignKey(View view){
+        DBManager.getInstance().testForeignKey();
+//        DBManager.getInstance().testIndex();
     }
     @Override
     public void onClick(View v) {
