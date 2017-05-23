@@ -47,27 +47,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DBManager.getInstance().createFilmCategoryTable();
     }
 
-    public void createFavCategoryTable(View view){
+    public void createFavCategoryTable(View view) {
         DBManager.getInstance().createFavCategoryTable();
     }
 
-    public void insertDataIntoFilmCategoryTable(View view){
+    public void insertDataIntoFilmCategoryTable(View view) {
         DBManager.getInstance().insertDataIntoCategoryTable();
     }
 
-    public void createAllTable(View view){
+    public void createAllTable(View view) {
         DBManager.getInstance().createAllTable();
     }
-    public void insertData(View view){
+
+    public void insertData(View view) {
         DBManager.getInstance().insertDataIntoCategoryTable();
         DBManager.getInstance().insertIntoTableMemberDetails();
     }
 
-    public void updateTable(View view){
+    public void updateTable(View view) {
         DBManager.getInstance().updateTable();
     }
 
-    public void doExercise(View view){
+    public void doExercise(View view) {
 //        DBManager.getInstance().doExercise();
 //        DBManager.getInstance().alterAttendanceTable();
 //        DBManager.getInstance().addFavCategoryForeignKey();
@@ -75,25 +76,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        DBManager.getInstance().testNulls();
 //        DBManager.getInstance().testStringNulls();
 //        DBManager.getInstance().testGroupBy();
-        DBManager.getInstance().testCount();
+//        DBManager.getInstance().testCount();
+//        DBManager.getInstance().testAvg();
+//        DBManager.getInstance().testMinAndMax();
+//        DBManager.getInstance().testHaving();
+//        DBManager.getInstance().testOuterJoin();
+//        DBManager.getInstance().testUnion();
+//        DBManager.getInstance().chapter7();
+//        DBManager.getInstance().subQuery();
+//        DBManager.getInstance().testExists();
+//        DBManager.getInstance().testCorrelatedQuery();
+        DBManager.getInstance().testOtherSubquery();
     }
 
-    public void initData(View view){
+    public void initData(View view) {
         DBManager.getInstance().createTableAndInitData();
     }
 
-    public void selectLike(View view){
+    public void selectLike(View view) {
         DBManager.getInstance().selectLike();
     }
 
-    public void addPrimaryKey(View view){
+    public void addPrimaryKey(View view) {
         DBManager.getInstance().addPrimaryKey();
     }
 
-    public void testForeignKey(View view){
+    public void testForeignKey(View view) {
         DBManager.getInstance().testForeignKey();
 //        DBManager.getInstance().testIndex();
     }
+
     @Override
     public void onClick(View v) {
 
