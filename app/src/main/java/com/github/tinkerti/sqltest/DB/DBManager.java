@@ -74,23 +74,23 @@ public class DBManager {
     }
 
     public void createMemberDetailsTable() {
-        String sql = "create table if not exists MemberDetails (MemberId integer not null primary key, FirstName text, LastName text, DateOfBirth text, Street text," +
+        String sql = "create table MemberDetails (MemberId integer , FirstName text, LastName text, DateOfBirth text, Street text," +
                 "City text, State varchar,ZipCode text, Email text, DateOfJoining text)";
         getDbHelper().getWritableDatabase().execSQL(sql);
     }
 
     public void createLocationTable() {
-        String sql = "create table if not exists Location(LocationId integer,Street text,City text,State text)";
+        String sql = "create table Location(LocationId integer,Street text,City text,State text)";
         getDbHelper().getWritableDatabase().execSQL(sql);
     }
 
     public void createAttendanceTable() {
-        String sql = "create table if not exists Attendance(LocationId integer,MeetingDate text,MemberAttended text, MemberId integer)";
+        String sql = "create table Attendance(LocationId integer,MeetingDate text,MemberAttended text, MemberId integer)";
         getDbHelper().getWritableDatabase().execSQL(sql);
     }
 
     public void createFilmTable() {
-        String sql = "create table if not exists Film (FilmId integer primary key,FilmName text,YearReleased integer,PlotSummary text,AvailableDVD text," +
+        String sql = "create table Film (FilmId integer,FilmName text,YearReleased integer,PlotSummary text,AvailableDVD text," +
                 "Rating integer,CategoryId integer)";
         getDbHelper().getWritableDatabase().execSQL(sql);
 
@@ -104,7 +104,7 @@ public class DBManager {
     }
 
     public void createFavCategoryTable() {
-        String sql = "create table if not exists FavCategory(CategoryId integer,MemberId integer)";
+        String sql = "create table FavCategory(CategoryId integer,MemberId integer)";
         getDbHelper().getWritableDatabase().execSQL(sql);
     }
 
@@ -477,7 +477,7 @@ public class DBManager {
                 "AvailableDVD," +
                 "Rating," +
                 "CategoryId) values(" +
-                "11," +
+                "2," +
                 "'15th Late Afternoon'," +
                 "'1989'," +
                 "'One of Shakespeare’’s lesser-known plays'," +
@@ -492,7 +492,7 @@ public class DBManager {
                 "AvailableDVD," +
                 "Rating," +
                 "CategoryId) values(" +
-                "12," +
+                "2," +
                 "'Soylent Yellow'," +
                 "'1967'," +
                 "'Detective Billy Brambles discovers that Soylent Yellow is made of soya bean.\n" +
@@ -511,18 +511,6 @@ public class DBManager {
         getDbHelper().getWritableDatabase().execSQL(sql8);
         getDbHelper().getWritableDatabase().execSQL(sql9);
         getDbHelper().getWritableDatabase().execSQL(sql10);
-        String updateFilm = "update Film set DVDPrice=2.333 where CategoryId=2";
-        getDbHelper().getWritableDatabase().execSQL(updateFilm);
-        String updateFilm1 = "update Film set DVDPrice=4 where CategoryId=1";
-        getDbHelper().getWritableDatabase().execSQL(updateFilm1);
-        String updateFilm2 = "update Film set DVDPrice=5.3 where CategoryId=3";
-        getDbHelper().getWritableDatabase().execSQL(updateFilm2);
-        String updateFilm3 = "update Film set DVDPrice=10 where CategoryId=4";
-        getDbHelper().getWritableDatabase().execSQL(updateFilm3);
-        String updateFilm4 = "update Film set DVDPrice=23 where CategoryId=5";
-        getDbHelper().getWritableDatabase().execSQL(updateFilm4);
-        String updateFilm5 = "update Film set DVDPrice=203 where CategoryId=6";
-        getDbHelper().getWritableDatabase().execSQL(updateFilm5);
 
     }
 
@@ -701,9 +689,6 @@ public class DBManager {
         insertDataIntoFavCategoryTable();
         insertDataIntoFilmTable();
         insertDataIntoAttendanceTable();
-
-        createMoreTable();
-        insertDataToTable();
 
     }
 
@@ -1118,410 +1103,16 @@ public class DBManager {
                 "order by count(MemberId) desc";
         Cursor cursor5 = getDbHelper().getWritableDatabase().rawQuery(countSql5, null);
         while (cursor5.moveToNext()) {
-            Log.e("count", "numbers: " + cursor5.getString(0) + "..." + cursor5.getInt(1));
+            Log.e("count", "numbers: " + cursor5.getString(0)+"..."+cursor5.getInt(1));
         }
         Log.e("分隔符", "--------------------");
 
         String countSql6 = "select avg(MemberId) from MemberDetails";
         Cursor cursor6 = getDbHelper().getWritableDatabase().rawQuery(countSql6, null);
         while (cursor6.moveToNext()) {
-            Log.e("count", "numbers: " + cursor6.getInt(0) + "..");
+            Log.e("count", "numbers: " + cursor6.getInt(0) + ".." );
         }
         Log.e("分隔符", "--------------------");
     }
-
-    public void testAvg() {
-        String avgSql = "select FilmCategory.Category,avg(Film.DVDPrice) from Film " +
-                "inner join FilmCategory on Film.CategoryId=FilmCategory.CategoryId " +
-                "group by Film.CategoryId";
-
-        Cursor cursor = getDbHelper().getWritableDatabase().rawQuery(avgSql, null);
-        while (cursor.moveToNext()) {
-            Log.e("count", "numbers: " + cursor.getString(0) + "..." + cursor.getFloat(1));
-        }
-        Log.e("分隔符", "--------------------");
-    }
-
-    public void testMinAndMax() {
-        String minSql = "select min(DateOfBirth),max(DateOfBirth) from MemberDetails";
-        Cursor cursor = getDbHelper().getWritableDatabase().rawQuery(minSql, null);
-        while (cursor.moveToNext()) {
-            Log.e("count", "numbers: " + cursor.getString(0) + "..." + cursor.getString(1));
-        }
-        Log.e("分隔符", "--------------------");
-
-        String sql = "select State,max(DateOfBirth),min(DateOfBirth) from MemberDetails group by State";
-        Cursor cursor1 = getDbHelper().getWritableDatabase().rawQuery(sql, null);
-        while (cursor1.moveToNext()) {
-            Log.e("count", "numbers: " + cursor1.getString(0) + "..." + cursor1.getString(1) + "..." + cursor1.getString(2));
-        }
-        Log.e("分隔符", "--------------------");
-    }
-
-    public void testHaving() {
-        String sql = "select City,count(City) from MemberDetails group by City having count(City)>1";
-        Cursor cursor = getDbHelper().getWritableDatabase().rawQuery(sql, null);
-        while (cursor.moveToNext()) {
-            Log.e("count", "numbers: " + cursor.getString(0) + "..." + cursor.getInt(1));
-        }
-        Log.e("分隔符", "--------------------");
-
-        String havingSql = "select Category,count(FavCategory.MemberId) from FavCategory " +
-                "inner join FilmCategory on FavCategory.CategoryId=FilmCategory.CategoryId " +
-                "group by FavCategory.CategoryId " +
-                "having count(FavCategory.MemberId)>2";
-        Cursor cursor1 = getDbHelper().getWritableDatabase().rawQuery(havingSql, null);
-        while (cursor1.moveToNext()) {
-            Log.e("count", "numbers: " + cursor1.getString(0) + "..." + cursor1.getInt(1));
-        }
-        Log.e("分隔符", "--------------------");
-
-        String ratingSql = "select FilmName,max(Rating),min(Rating) from Film group by CategoryId";
-        Cursor cursor2 = getDbHelper().getWritableDatabase().rawQuery(ratingSql, null);
-        while (cursor2.moveToNext()) {
-            Log.e("count", "numbers: " + cursor2.getString(0) + "..." + cursor2.getInt(1) + "..." + cursor2.getInt(2));
-        }
-        Log.e("分隔符", "--------------------");
-
-//        这个是不管用的，因为SQLite没有Year()这个函数；
-        String nonEquiJoin = "select FilmName,FirstName,LastName from MemberDetails \n" +
-                "inner join Film on MemberDetails.DateOfBirth>=Film.YearReleased \n" +
-                "where MemberDetails.State='Golden State' order by FirstName,LastName";
-        Cursor cursor3 = getDbHelper().getWritableDatabase().rawQuery(nonEquiJoin, null);
-        while (cursor3.moveToNext()) {
-            Log.e("count", "numbers: " + cursor3.getString(0) + "..." + cursor3.getString(1) + "..." + cursor3.getString(2));
-        }
-        Log.e("分隔符", "--------------------");
-
-        String multiJoin = "select FirstName,LastName,Category from FavCategory " +
-                "inner join MemberDetails on FavCategory.MemberId=MemberDetails.MemberId " +
-                "inner join FilmCategory on FavCategory.CategoryId=FilmCategory.CategoryId " +
-                "order by FirstName,LastName";
-        Cursor cursor4 = getDbHelper().getWritableDatabase().rawQuery(multiJoin, null);
-        while (cursor4.moveToNext()) {
-            Log.e("count", "numbers: " + cursor4.getString(0) + "..." + cursor4.getString(1) + "..." + cursor4.getString(2));
-        }
-        Log.e("分隔符", "--------------------");
-
-        String multiOnCondition = "select FirstName,LastName,MemberDetails.City,MemberDetails.State from MemberDetails " +
-                "inner join Location on MemberDetails.City=Location.City and MemberDetails.State=Location.State order by FirstName";
-        Cursor cursor5 = getDbHelper().getWritableDatabase().rawQuery(multiOnCondition, null);
-        while (cursor5.moveToNext()) {
-            Log.e("count", "numbers: " + cursor5.getString(0) + "..." + cursor5.getString(1) + "..." + cursor5.getString(2) + "..." + cursor5.getString(3));
-        }
-        Log.e("分隔符", "--------------------");
-
-        String crossJoin = "select Category,Street from FilmCategory cross join Location order by Category";
-        Cursor cursor6 = getDbHelper().getWritableDatabase().rawQuery(crossJoin, null);
-        while (cursor6.moveToNext()) {
-            Log.e("count", "numbers: " + cursor6.getString(0) + "..." + cursor6.getString(1) + "...");
-        }
-        Log.e("分隔符", "--------------------");
-
-        String crossJoin1 = "select Category,Street from FilmCategory ,Location order by Category";
-        Cursor cursor7 = getDbHelper().getWritableDatabase().rawQuery(crossJoin1, null);
-        while (cursor7.moveToNext()) {
-            Log.e("count", "numbers: " + cursor7.getString(0) + "..." + cursor7.getString(1) + "...");
-        }
-        Log.e("分隔符", "--------------------");
-
-
-        //selfJoin
-        String selfJoin = "select t1.FirstName,t1.LastName,t2.FirstName,t2.LastName from MemberDetails as t1 " +
-                "inner join MemberDetails as t2 " +
-                "where t1.City=t2.City and t1.State=t2.State and t1.MemberId<t2.MemberId";
-        Cursor cursor8 = getDbHelper().getWritableDatabase().rawQuery(selfJoin, null);
-        while (cursor8.moveToNext()) {
-            Log.e("count", "numbers: " + cursor8.getString(0) + " " + cursor8.getString(1) + "..." + cursor8.getString(2) + " " + cursor8.getString(3));
-        }
-        Log.e("分隔符", "--------------------");
-
-        //selfJoin
-        String selfJoin1 = "select t1.FirstName,t1.LastName,t2.FirstName,t2.LastName from MemberDetails as t1 " +
-                "inner join MemberDetails as t2 " +
-                "on t1.City=t2.City and t1.State=t2.State and t1.MemberId<t2.MemberId";
-        Cursor cursor9 = getDbHelper().getWritableDatabase().rawQuery(selfJoin1, null);
-        while (cursor9.moveToNext()) {
-            Log.e("count", "numbers: " + cursor9.getString(0) + " " + cursor9.getString(1) + "..." + cursor9.getString(2) + " " + cursor9.getString(3));
-        }
-        Log.e("分隔符", "--------------------");
-    }
-
-    public void testOuterJoin() {
-        String sql = "select Location.Street,MemberDetails.Street from Location " +
-                "left outer join MemberDetails on Location.Street=MemberDetails.Street";
-        Cursor cursor = getDbHelper().getWritableDatabase().rawQuery(sql, null);
-        while (cursor.moveToNext()) {
-            Log.e("count", "numbers: " + cursor.getString(0) + "..." + cursor.getString(1) + "...");
-        }
-        Log.e("分隔符", "--------------------");
-
-        String sql1 = "select Location.City,MemberDetails.City from Location " +
-                "left outer join MemberDetails on Location.City=MemberDetails.City";
-        Cursor cursor1 = getDbHelper().getWritableDatabase().rawQuery(sql1, null);
-        while (cursor1.moveToNext()) {
-            Log.e("count", "numbers: " + cursor1.getString(0) + "..." + cursor1.getString(1) + "...");
-        }
-        Log.e("分隔符", "--------------------");
-
-        String sql2 = "select Location.City,MemberDetails.City from MemberDetails " +
-                "left outer join Location on Location.City=MemberDetails.City";
-        Cursor cursor2 = getDbHelper().getWritableDatabase().rawQuery(sql2, null);
-        while (cursor2.moveToNext()) {
-            Log.e("count", "numbers: " + cursor2.getString(0) + "..." + cursor2.getString(1) + "...");
-        }
-        Log.e("分隔符", "--------------------");
-
-        String sql3 = "select FilmCategory.Category,Film.FilmName from FilmCategory " +
-                "left outer join Film on FilmCategory.CategoryId=Film.CategoryId";
-        Cursor cursor3 = getDbHelper().getWritableDatabase().rawQuery(sql3, null);
-        while (cursor3.moveToNext()) {
-            Log.e("count", "numbers: " + cursor3.getString(0) + "..." + cursor3.getString(1) + "...");
-        }
-        Log.e("分隔符", "--------------------");
-
-        String sql4 = "select FilmCategory.Category,Film.FilmName from FilmCategory " +
-                "left outer join Film on FilmCategory.CategoryId=Film.CategoryId where Film.AvailableDVD='Y'";
-        Cursor cursor4 = getDbHelper().getWritableDatabase().rawQuery(sql4, null);
-        while (cursor4.moveToNext()) {
-            Log.e("count", "numbers: " + cursor4.getString(0) + "..." + cursor4.getString(1) + "...");
-        }
-        Log.e("分隔符", "--------------------");
-
-        //SQLite 不支持right and full outer joins
-//        String sql5="select Location.City,MemberDetails.City from Location " +
-//                "right outer join MemberDetails on Location.City=MemberDetails.City";
-//        Cursor cursor5 = getDbHelper().getWritableDatabase().rawQuery(sql5, null);
-//        while (cursor5.moveToNext()) {
-//            Log.e("count", "numbers: " + cursor5.getString(0) + "..." + cursor5.getString(1) + "...");
-//        }
-//        Log.e("分隔符", "--------------------");
-    }
-
-    /**
-     * 测试union
-     */
-    public void testUnion() {
-        String sql = "select FilmId,FilmName from Film " +
-                "union select MemberId,FirstName from MemberDetails";
-        Cursor cursor = getDbHelper().getWritableDatabase().rawQuery(sql, null);
-        while (cursor.moveToNext()) {
-            Log.e("count", "numbers: " + cursor.getString(0) + "..." + cursor.getString(1) + "...");
-        }
-        Log.e("分隔符", "--------------------");
-
-        String sql1 = "select FilmId from Film " +
-                "union select MemberId from MemberDetails";
-        Cursor cursor1 = getDbHelper().getWritableDatabase().rawQuery(sql1, null);
-        while (cursor1.moveToNext()) {
-            Log.e("count", "numbers: " + cursor1.getString(0) + "...");
-        }
-        Log.e("分隔符", "--------------------");
-
-        String sql2 = "select FilmId from Film " +
-                "union all select MemberId from MemberDetails";
-        Cursor cursor2 = getDbHelper().getWritableDatabase().rawQuery(sql2, null);
-        while (cursor2.moveToNext()) {
-            Log.e("count", "numbers: " + cursor2.getString(0) + "...");
-        }
-        Log.e("分隔符", "--------------------");
-
-        String sql3 = "select FilmId from Film " +
-                "union all select MemberId from MemberDetails " +
-                "order by MemberId";
-        Cursor cursor3 = getDbHelper().getWritableDatabase().rawQuery(sql3, null);
-        while (cursor3.moveToNext()) {
-            Log.e("count", "numbers: " + cursor3.getString(0) + "...");
-        }
-        Log.e("分隔符", "--------------------");
-    }
-
-
-    public void chapter7() {
-        String sql = "select md1.FirstName,md1.LastName,md2.FirstName,md2.LastName,FilmCategory.Category from FavCategory " +
-                "as fav1 inner join FavCategory as fav2 on fav1.CategoryId=fav2.CategoryId and fav1.MemberId<fav2.MemberId " +
-                "inner join MemberDetails as md1 on fav1.MemberId=md1.MemberId\n" +
-                " inner join FilmCategory on fav1.CategoryId=FilmCategory.CategoryId " +
-                "inner join MemberDetails as md2 on fav2.MemberId=md2.MemberId ";
-        Cursor cursor = getDbHelper().getWritableDatabase().rawQuery(sql, null);
-        while (cursor.moveToNext()) {
-            Log.e("count", "numbers: " + cursor.getString(0) + " " + cursor.getString(1) + "..."
-                    + cursor.getString(2) + " " + cursor.getString(3) +
-                    "..." + cursor.getString(4));
-        }
-        Log.e("分隔符", "--------------------");
-
-        String sql1 = "select FilmCategory.Category from FilmCategory " +
-                "where FilmCategory.CategoryId not in (select FavCategory.CategoryId from FavCategory)"; //注意subquery记得加上小括号；
-        Cursor cursor1 = getDbHelper().getWritableDatabase().rawQuery(sql1, null);
-        while (cursor1.moveToNext()) {
-            Log.e("count", "numbers: " + cursor1.getString(0));
-        }
-        Log.e("分隔符", "--------------------");
-    }
-
-    public void subQuery() {
-        String sql = "select MemberId from MemberDetails where MemberId=(select max(FilmId) from Film where FilmId in (select LocationId from Location))";
-        Cursor cursor = getDbHelper().getWritableDatabase().rawQuery(sql, null);
-        while (cursor.moveToNext()) {
-            Log.e("count", "numbers: " + cursor.getString(0));
-        }
-        Log.e("分隔符", "--------------------");
-
-        //subquery 作为结果集中的一部分
-        String subquery = "select Category,(select max(FilmId) from Film where Film.CategoryId=FilmCategory.CategoryId),CategoryId from FilmCategory";
-        Cursor cursor1 = getDbHelper().getWritableDatabase().rawQuery(subquery, null);
-        while (cursor1.moveToNext()) {
-            Log.e("count", "numbers: " + cursor1.getString(0) + "..." + cursor1.getString(1) + "..." + cursor1.getString(2));
-        }
-        Log.e("分隔符", "--------------------");
-    }
-
-    public void testExists() {
-        String sql = "select City from Location where exists (select * from MemberDetails where MemberId>2)";
-        Cursor cursor = getDbHelper().getWritableDatabase().rawQuery(sql, null);
-        while (cursor.moveToNext()) {
-            Log.e("count", "numbers: " + cursor.getString(0));
-        }
-        Log.e("分隔符", "--------------------");
-
-        //失败的sql语句
-        String tryItOutSql = "select FilmCategory.Category from FavCategory " +
-                "inner join FilmCategory on FavCategory.CategoryId=FilmCategory.CategoryId " +
-//                   "inner join Film on FavCategory.CategoryId=Film.CategoryId " +
-                "group by FavCategory.CategoryId having count(FavCategory.MemberId)>=3 ";
-//                   "where exists (select * from Film where Film.CategoryId=FavCategory.CategoryId and Film.Rating>3)";
-        Cursor cursor1 = getDbHelper().getWritableDatabase().rawQuery(tryItOutSql, null);
-        while (cursor1.moveToNext()) {
-            Log.e("count", "numbers: " + cursor1.getString(0));
-        }
-        Log.e("分隔符", "--------------------");
-
-        String sql2 = "select Category from FilmCategory where exists " +
-                "(select * from film where FilmCategory.CategoryId=Film.CategoryId and Rating>3 " +
-                "and (select count(CategoryId) from FavCategory where FavCategory.CategoryId=FilmCategory.CategoryId)>=3)";
-        Cursor cursor2 = getDbHelper().getWritableDatabase().rawQuery(sql2, null);
-        while (cursor2.moveToNext()) {
-            Log.e("count", "numbers: " + cursor2.getString(0));
-        }
-        Log.e("分隔符", "--------------------");
-    }
-
-    public void testCorrelatedQuery() {
-        String sql = "select FilmCategory.Category,Film.Rating,Film.DVDPrice,Film.FilmName from FilmCategory inner join Film on FilmCategory.CategoryId=Film.CategoryId " +
-                "where Film.DVDPrice=(select min(Film.DVDPrice) from Film " +
-                "where Film.CategoryId=FilmCategory.CategoryId and Rating=" +
-                "(select max(Film.Rating) from Film where Film.CategoryId=FilmCategory.CategoryId group by Film.CategoryId) group by Film.CategoryId) group by Film.CategoryId";
-        Cursor cursor = getDbHelper().getWritableDatabase().rawQuery(sql, null);
-        while (cursor.moveToNext()) {
-            Log.e("count", "numbers: " + cursor.getString(0) + "..." + cursor.getInt(1) + "...." + cursor.getInt(2) + "......" + cursor.getString(3) + ".....");
-        }
-        Log.e("分隔符", "--------------------");
-    }
-
-    public void testOtherSubquery() {
-        String sql = "insert into FavCategory select 9,MemberDetails.MemberId from MemberDetails " +
-                "inner join FavCategory as fc1 on MemberDetails.MemberId=fc1.MemberId " +
-                "where fc1.CategoryId=(select CategoryId from FilmCategory where FilmCategory.Category='Thriller') " +
-                "and not exists (select * from FavCategory as fc2 where fc2.MemberId=fc1.MemberId and fc2.CategoryId=9)";
-        getDbHelper().getWritableDatabase().execSQL(sql);
-
-        String updateSubquery = "update Film set DVDPrice=(select max(DVDPrice) from Film) " +
-                "where Film.Rating>3 " +
-                "and (select count(fc1.MemberId) from FavCategory as fc1 where fc1.CategoryId=Film.CategoryId group by fc1.CategoryId)>=3";
-        getDbHelper().getWritableDatabase().execSQL(updateSubquery);
-    }
-
-    /**
-     * 在添加foreign key的时候有问题，少了关键字foreign key
-     * 无意间使用了关键字order作为table name，然后就一直报错。。。
-     * 下次需要注意这个问题；
-     */
-    public void createMoreTable() {
-        String sql = "create table if not exists SalePerson(SalePersonId integer not null primary key," +
-                "FirstName varchar(50) not null," +
-                "LastName varchar(50) not null)";
-        getDbHelper().getWritableDatabase().execSQL(sql);
-//        String createOrders = "create table if not exists Order(OrderId integer not null primary key," +
-//                "MemberId integer," +
-//                "SalePersonId integer," +
-//                "OrderDate text," +
-//                "foreign key(SalePersonId) references SalePerson(SalePersonId)," +
-//                "foreign key (MemberId) references MemberDetails(MemberId))";
-//        getDbHelper().getWritableDatabase().execSQL(createOrders);
-
-        String createOrder="create table if not exists Orders(OrderId integer not null primary key,MemberId integer,SalePersonId integer,OrderDate text," +
-                "foreign key(SalePersonId) references SalePerson(SalePersonId)," +
-                "foreign key(MemberId) references MemberDetails(MemberId))";
-        getDbHelper().getWritableDatabase().execSQL(createOrder);
-
-        String createOrderItems = "create table if not exists OrderItems(OrderId integer not null," +
-                "FilmId integer not null," +
-                "constraint Film_fk  foreign key(FilmId) references Film(FilmId)," +
-                "constraint Order_fk foreign key(OrderId) references Orders(OrderId)," +
-                "constraint OrderItem_pk primary key(OrderId,FilmId))";
-
-        getDbHelper().getWritableDatabase().execSQL(createOrderItems);
-    }
-
-    public void insertDataToTable() {
-        String insertSql1 = "insert into SalePerson values(1,'Sandra','Hugson')";
-        String insertSql2 = "insert into SalePerson values(2,'Frasier','Crane')";
-        String insertSql3 = "insert into SalePerson values(3,'Daphne','Moon')";
-        getDbHelper().getWritableDatabase().execSQL(insertSql1);
-        getDbHelper().getWritableDatabase().execSQL(insertSql2);
-        getDbHelper().getWritableDatabase().execSQL(insertSql3);
-
-        String insertOrderSql1 = "insert into Orders values(10,1,1,'2006-07-30')";
-        String insertOrderSql2 = "insert into Orders values(11,4,1,'2006-07-30')";
-        String insertOrderSql3 = "insert into Orders values(12,6,1,'2006-07-30')";
-        String insertOrderSql4 = "insert into Orders values(13,4,1,'2006-07-30')";
-        String insertOrderSql5 = "insert into Orders values(1,6,2,'2006-07-30')";
-        String insertOrderSql6 = "insert into Orders values(2,4,2,'2006-07-30')";
-        String insertOrderSql7 = "insert into Orders values(26,5,3,'2006-07-30')";
-        String insertOrderSql8 = "insert into Orders values(27,5,3,'2006-07-30')";
-        String insertOrderSql9 = "insert into Orders values(29,6,3,'2006-07-30')";
-
-        getDbHelper().getWritableDatabase().execSQL(insertOrderSql1);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderSql2);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderSql3);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderSql4);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderSql5);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderSql6);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderSql7);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderSql8);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderSql9);
-
-        String insertOrderItem1 = "insert into OrderItems values(10,4)";
-        String insertOrderItem2 = "insert into OrderItems values(10,3)";
-        String insertOrderItem3 = "insert into OrderItems values(11,1)";
-        String insertOrderItem4 = "insert into OrderItems values(11,2)";
-        String insertOrderItem5 = "insert into OrderItems values(12,7)";
-        String insertOrderItem6 = "insert into OrderItems values(12,2)";
-        String insertOrderItem7 = "insert into OrderItems values(13,5)";
-        String insertOrderItem8 = "insert into OrderItems values(1,5)";
-        String insertOrderItem9 = "insert into OrderItems values(2,6)";
-        String insertOrderItem10 = "insert into OrderItems values(26,6)";
-        String insertOrderItem11 = "insert into OrderItems values(27,8)";
-        String insertOrderItem12 = "insert into OrderItems values(26,4)";
-        String insertOrderItem13 = "insert into OrderItems values(29,4)";
-
-        getDbHelper().getWritableDatabase().execSQL(insertOrderItem1);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderItem2);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderItem3);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderItem4);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderItem5);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderItem6);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderItem7);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderItem8);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderItem9);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderItem10);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderItem11);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderItem12);
-        getDbHelper().getWritableDatabase().execSQL(insertOrderItem13);
-
-
-    }
-
 
 }
