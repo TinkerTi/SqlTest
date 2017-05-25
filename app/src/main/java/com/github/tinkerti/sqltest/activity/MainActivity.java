@@ -86,7 +86,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        DBManager.getInstance().subQuery();
 //        DBManager.getInstance().testExists();
 //        DBManager.getInstance().testCorrelatedQuery();
-        DBManager.getInstance().testOtherSubquery();
+//        DBManager.getInstance().testOtherSubquery();
+//        DBManager.getInstance().testComplexOrder();
+//        DBManager.getInstance().testEqualAndIn();
+        DBManager.getInstance().testView();
     }
 
     public void initData(View view) {

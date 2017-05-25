@@ -1450,7 +1450,7 @@ public class DBManager {
 //                "foreign key (MemberId) references MemberDetails(MemberId))";
 //        getDbHelper().getWritableDatabase().execSQL(createOrders);
 
-        String createOrder="create table if not exists Orders(OrderId integer not null primary key,MemberId integer,SalePersonId integer,OrderDate text," +
+        String createOrder = "create table if not exists Orders(OrderId integer not null primary key,MemberId integer,SalePersonId integer,OrderDate text," +
                 "foreign key(SalePersonId) references SalePerson(SalePersonId)," +
                 "foreign key(MemberId) references MemberDetails(MemberId))";
         getDbHelper().getWritableDatabase().execSQL(createOrder);
@@ -1520,8 +1520,65 @@ public class DBManager {
         getDbHelper().getWritableDatabase().execSQL(insertOrderItem12);
         getDbHelper().getWritableDatabase().execSQL(insertOrderItem13);
 
+    }
+
+    /**
+     * 第一步，分析需要获取的数据对应的column list，需要获取order的详细信息，那么这个详细信息包括订单的人MemberDetail.LastName,FirstName
+     * 订单包含的电影信息Film.FilmName,还包括订单的日期OrderDate：
+     * select MemberDetails.FirstName,MemberDetails.LastName,Film.FilmName,Orders.OrderDate,SalePerson.FirstName,SalePerson.LastName
+     * 第二步，我们需要获取的关键信息来自哪个表？因为我们想知道一个顾客两次以上购买同一个销售人员的商品，那么这个信息来自Orders表，
+     * 其他的需要获取的信息都是基于这个表，然后关联表来获取相关的信息:
+     * from Orders inner join MemberDetails on Orders.MemberId=MemberDetails.MemberId
+     * inner join SalePerson on Orders.SalePersonId=SalePerson.SalePersonId
+     * inner join OrderItems on Orders.OrderId=OrderItems.OrderId
+     * inner join Film on OrderItems.FilmId=Film.FilmId
+     * 第三步，想要知道一个顾客购买了两次以上同一个销售人员的商品，需要用到group by来进行处理和筛选：
+     * group by Orders.SalePersonId,Orders.MemberId where count(Orders.MemberId)>=2;
+     * <p>
+     * 这里需要注意一点，在对group by之后的结果进行筛选的时候需要使用having而不是where关键字；
+     */
+    public void testComplexOrder() {
+        String sql = "select MemberDetails.FirstName,MemberDetails.LastName,Orders.OrderDate,SalePerson.FirstName,SalePerson.LastName " +
+                "from Orders inner join MemberDetails on Orders.MemberId=MemberDetails.MemberId " +
+                "inner join SalePerson on Orders.SalePersonId=SalePerson.SalePersonId " +
+                "group by Orders.SalePersonId,Orders.MemberId having count(Orders.MemberId)>=2";
+        Cursor cursor = getDbHelper().getWritableDatabase().rawQuery(sql, null);
+        while (cursor.moveToNext()) {
+            Log.e("count", "numbers: " + cursor.getString(0) + "..." + cursor.getString(1) + "...." + cursor.getString(2) + "......" + cursor.getString(3) + "....."
+                    + cursor.getString(4) + "....");
+        }
+        Log.e("分隔符", "--------------------");
 
     }
+
+    public void testEqualAndIn() {
+        String sql = "select FirstName,LastName from MemberDetails where MemberId=(select MemberId from Orders )";
+        Cursor cursor = getDbHelper().getWritableDatabase().rawQuery(sql, null);
+        while (cursor.moveToNext()) {
+            Log.e("count", "numbers: " + cursor.getString(0) + "..." + cursor.getString(1));
+        }
+        Log.e("分隔符", "--------------------");
+
+        String sql1 = "select FirstName,LastName from MemberDetails where MemberId in (select MemberId from Orders)";
+        Cursor cursor1 = getDbHelper().getWritableDatabase().rawQuery(sql1, null);
+        while (cursor1.moveToNext()) {
+            Log.e("count", "numbers: " + cursor1.getString(0) + "..." + cursor1.getString(1));
+        }
+        Log.e("分隔符", "--------------------");
+    }
+
+    public void testView(){
+        String createViewSql="create view MemberNameEmail as select LastName,FirstName,Email from MemberDetails";
+        getDbHelper().getWritableDatabase().execSQL(createViewSql);
+
+        String sql="select * from MemberNameEmail" ;
+        Cursor cursor = getDbHelper().getWritableDatabase().rawQuery(sql, null);
+        while (cursor.moveToNext()) {
+            Log.e("count", "numbers: " + cursor.getString(0) + "..." + cursor.getString(1)+"...."+cursor.getString(2));
+        }
+        Log.e("分隔符", "--------------------");
+    }
+
 
 
 }
